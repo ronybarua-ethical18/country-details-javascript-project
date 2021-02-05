@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of All Countries</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="countryInformation">
+
+    </div>
+    <div id="country-list">
+
+    </div>
+
+    <script>
+        // api for countryName
+        fetch('https://restcountries.eu/rest/v2/all')
+            .then(response => response.json())
+            .then(data =>
+            displayName(data));
+
+        function displayName(countries) {
+            console.log(countries);
+            const countryList = document.getElementById('country-list');
+            countries.forEach(country => {
+                const countrydiv = document.createElement('div');
+                const countryInfo = `
+                <h3 class= "country-name">${country.name}</h3>
+                <h4 class="capital-name">${country.capital}</h4>
+                <button onClick="getCountryInfo('${country.name}') ">See Details</button>
+                `;
+                countrydiv.innerHTML = countryInfo;
+                countryList.appendChild(countrydiv);
+                countrydiv.className = 'country';
+            });
+        }
+
+        function getCountryInfo(name){
+            const url = `https://restcountries.eu/rest/v2/name/${name}`;
+            fetch(url)
+            .then(res => res.json())
+            .then(data =>renderCountryDetail(data[0]))
+        }
+
+        function renderCountryDetail(country){
+            const countryInformation = document.getElementById('countryInformation');
+            countryInformation.innerHTML = `
+            <h1>Country Name: ${country.name}</h1>
+            <p>Population: ${country.population}</p>
+            <p>Region: ${country.region}</p>
+            <img src="${country.flag}">
+            `;
+        }
+    </script>
+</body>
+
+</html>
